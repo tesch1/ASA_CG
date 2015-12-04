@@ -74,7 +74,7 @@ int asa_cg /*  return:
     double            *x, /* input: starting guess, output: the solution */
     double           *lo, /* lower bounds */
     double           *hi, /* upper bounds */
-    INT                n, /* problem dimension */
+    ASAINT                n, /* problem dimension */
     asa_stat       *Stat, /* structure with statistics (can be NULL) */
     asacg_parm    *CParm, /* user parameters, NULL = use default parameters */
     asa_parm      *AParm, /* user parameters, NULL = use default parameters */
@@ -90,12 +90,12 @@ int asa_cg /*  return:
                                                mem = MIN(memory, n)
                                  memory = 0 => need 5*n + m
                             if DymamicMemory = TRUE, need  5n + m */
-    INT          *iWork   /* NULL => allocate integer work space
+    ASAINT          *iWork   /* NULL => allocate integer work space
                              otherwise provide space to n integers */
 )
 {
     int gp, ident, status, mem ;
-    INT i, j, nfree, cbb_totit, cg_totit, *ifree ;
+    ASAINT i, j, nfree, cbb_totit, cg_totit, *ifree ;
     double alpha, gj, pert_lo, pert_hi, t, tl, th, gnorm, ginorm, pgnorm, xnorm,
            xj, xg, xp, *work, *d, *g, *xtemp, *gtemp, *pg ;
     asacg_parm *cgParm, cgParmStruc ;
@@ -129,15 +129,15 @@ int asa_cg /*  return:
 
     /* abort after maxit iterations of cbb in one pass */
     if ( asaParm->maxit_fac == INF ) Com.pgmaxit = INT_INF ;
-    else Com.pgmaxit = (INT) (((double) n)*asaParm->maxit_fac) ;
+    else Com.pgmaxit = (ASAINT) (((double) n)*asaParm->maxit_fac) ;
 
     /* abort after totit iterations of cbb in all passes */
     if ( asaParm->totit_fac == INF ) cbb_totit = INT_INF ;
-    else cbb_totit = (INT) (((double) n)*asaParm->totit_fac) ;
+    else cbb_totit = (ASAINT) (((double) n)*asaParm->totit_fac) ;
 
     /* abort after maxfunc function evaluation in one pass of cbb */
     if ( asaParm->maxfunc_fac == INF ) Com.pgmaxfunc = INT_INF ;
-    else Com.pgmaxfunc = (INT) (((double) n)*asaParm->maxfunc_fac) ;
+    else Com.pgmaxfunc = (ASAINT) (((double) n)*asaParm->maxfunc_fac) ;
 
     cg_totit = cgParm->maxit ;
 
@@ -157,10 +157,10 @@ int asa_cg /*  return:
     Com.x = x ;
     Com.n = n ;             /* problem dimension */
     Com.n5 = n % 5 ;
-    Com.nf = (INT) 0 ;      /* number of function evaluations */
-    Com.ng = (INT) 0 ;      /* number of gradient evaluations */
-    Com.cbbiter = (INT) 0 ; /* number of cbb iterations evaluations */
-    Com.cgiter = (INT) 0 ;  /* number of cg iterations */
+    Com.nf = (ASAINT) 0 ;      /* number of function evaluations */
+    Com.ng = (ASAINT) 0 ;      /* number of gradient evaluations */
+    Com.cbbiter = (ASAINT) 0 ; /* number of cbb iterations evaluations */
+    Com.cgiter = (ASAINT) 0 ;  /* number of cg iterations */
     Com.AWolfe = cgParm->AWolfe ; /* do not touch user's AWolfe */
     Com.AArmijo = asaParm->AArmijo ; /* do not touch user's AArmijo */
     Com.value = value ;
@@ -171,7 +171,7 @@ int asa_cg /*  return:
     /* allocate integer work array */
     if ( iWork == NULL )
     {
-        ifree = Com.ifree = (INT *) malloc (n*sizeof (INT)) ;
+        ifree = Com.ifree = (ASAINT *) malloc (n*sizeof (ASAINT)) ;
     }
     else
     {
@@ -650,7 +650,7 @@ PRIVATE int asa_descent /*  return:
     asa_com *Com
 )
 {
-    INT     i, iter, IterRestart, maxit, n, n5, nfree, nf, ng, nrestart,
+    ASAINT     i, iter, IterRestart, maxit, n, n5, nfree, nf, ng, nrestart,
             nrestartsub ;
     int     nslow, slowlimit, IterQuad, status, PrintLevel, QuadF ;
     double  delta2, Qk, Ck, fbest, gbest, pgnorm, ginorm,
@@ -732,7 +732,7 @@ PRIVATE int asa_descent /*  return:
     memk = 0 ;         /* number of vectors in current memory */
 
     /* the conjugate gradient algorithm is restarted every nrestart iteration */
-    nrestart = (INT) (((double) nfree)*Parm->restart_fac) ;
+    nrestart = (ASAINT) (((double) nfree)*Parm->restart_fac) ;
 
     /* abort when number of iterations reaches maxit in one pass through cg */
     Com->cgmaxit = maxit = Parm->maxit ;
@@ -2868,10 +2868,10 @@ PRIVATE void asacg_Yk
     double *gold, /* initial vector */
     double *gnew, /* search direction */
     double  *yty, /* y'y */
-    INT        n  /* length of the vectors */
+    ASAINT        n  /* length of the vectors */
 )
 {
-    INT n5, i ;
+    ASAINT n5, i ;
     double s, t ;
     n5 = n % 5 ;
     if ( (y != NULL) && (yty == NULL) )
@@ -3006,7 +3006,7 @@ PRIVATE int asacg_evaluate
     asa_com   *Com
 )
 {
-    INT n ;
+    ASAINT n ;
     int i ;
     double alpha, *d, *g, *gtemp, *x, *xtemp ;
     asacg_parm *Parm ;
@@ -3450,13 +3450,13 @@ PRIVATE void asa_matvec
     double *A, /* dense matrix */
     double *x, /* input vector */
     int     n, /* number of columns of A */
-    INT     m, /* number of rows of A */
+    ASAINT     m, /* number of rows of A */
     int     w  /* T => y = A*x, F => y = A'*x */
 )
 {
 /* if the blas have not been installed, then hand code the produce */
 #ifdef NOBLAS
-    INT j, l ;
+    ASAINT j, l ;
     l = 0 ;
     if ( w )
     {
@@ -3479,7 +3479,7 @@ PRIVATE void asa_matvec
 
 /* if the blas have been installed, then possibly call gdemv */
 #ifndef NOBLAS
-    INT j, l ;
+    ASAINT j, l ;
     BLAS_INT M, N ;
     if ( w || (!w && (m*n < MATVEC_START)) )
     {
@@ -3624,10 +3624,10 @@ PRIVATE void asa_scale
     double *y, /* output vector */
     double *x, /* input vector */
     double  s, /* scalar */
-    INT     n /* length of vector */
+    ASAINT     n /* length of vector */
 )
 {
-    INT i, n5 ;
+    ASAINT i, n5 ;
     n5 = n % 5 ;
     if ( y == x)
     {
@@ -3706,7 +3706,7 @@ PRIVATE void asa_daxpy0
     int         n  /* length of the vectors */
 )
 {
-    INT i, n5 ;
+    ASAINT i, n5 ;
     n5 = n % 5 ;
     if (alpha == -ONE)
     {
@@ -3745,11 +3745,11 @@ PRIVATE void asa_daxpy
     double     *x, /* input and output vector */
     double     *d, /* direction */
     double  alpha, /* stepsize */
-    INT         n  /* length of the vectors */
+    ASAINT         n  /* length of the vectors */
 )
 {
 #ifdef NOBLAS
-    INT i, n5 ;
+    ASAINT i, n5 ;
     n5 = n % 5 ;
     if (alpha == -ONE)
     {
@@ -3778,7 +3778,7 @@ PRIVATE void asa_daxpy
 #endif
 
 #ifndef NOBLAS
-    INT i, n5 ;
+    ASAINT i, n5 ;
     BLAS_INT N ;
     if ( n < DAXPY_START )
     {
@@ -3830,7 +3830,7 @@ PRIVATE double asa_dot0
     int     n /* length of vectors */
 )
 {
-    INT i, n5 ;
+    ASAINT i, n5 ;
     double t ;
     t = ZERO ;
     if ( n <= 0 ) return (t) ;
@@ -3853,11 +3853,11 @@ PRIVATE double asa_dot
 (
     double *x, /* first vector */
     double *y, /* second vector */
-    INT     n /* length of vectors */
+    ASAINT     n /* length of vectors */
 )
 {
 #ifdef NOBLAS
-    INT i, n5 ;
+    ASAINT i, n5 ;
     double t ;
     t = ZERO ;
     if ( n <= 0 ) return (t) ;
@@ -3872,7 +3872,7 @@ PRIVATE double asa_dot
 #endif
 
 #ifndef NOBLAS
-    INT i, n5 ;
+    ASAINT i, n5 ;
     double t ;
     BLAS_INT N ;
     if ( n < DDOT_START )
@@ -3937,11 +3937,11 @@ PRIVATE void asa_copy
 (
     double *y, /* output of copy */
     double *x, /* input of copy */
-    INT     n  /* length of vectors */
+    ASAINT     n  /* length of vectors */
 )
 {
 #ifdef NOBLAS
-    INT i, n5 ;
+    ASAINT i, n5 ;
     n5 = n % 5 ;
     for (i = 0; i < n5; i++) y [i] = x [i] ;
     for (; i < n; )
@@ -3960,7 +3960,7 @@ PRIVATE void asa_copy
 #endif
 
 #ifndef NOBLAS
-    INT i, n5 ;
+    ASAINT i, n5 ;
     BLAS_INT N ;
     if ( n < DCOPY_START )
     {
@@ -4001,11 +4001,11 @@ PRIVATE void asa_update_xy
     double *xnew, /* input of copy */
     double *y, /* output of copy */
     double *ynew, /* input of copy */
-    INT     n  /* length of vectors */
+    ASAINT     n  /* length of vectors */
 )
 {
 #ifdef NOBLAS
-    INT i, n5 ;
+    ASAINT i, n5 ;
     n5 = n % 5 ;
     for (i = 0; i < n5; i++)
     {
@@ -4033,7 +4033,7 @@ PRIVATE void asa_update_xy
 #endif
 
 #ifndef NOBLAS
-    INT i, n5 ;
+    ASAINT i, n5 ;
     BLAS_INT N ;
     if ( n < DCOPY_START )
     {
@@ -4090,12 +4090,12 @@ PRIVATE double asa_update_pg
     double   bdist, /* distance of x to the boundary is greater than bdist*/
     double     *lo, /* lower bound */
     double     *hi, /* upper bound */
-    INT      nfree, /* dimension of subspace */
-    INT         n, /* length of vectors */
+    ASAINT      nfree, /* dimension of subspace */
+    ASAINT         n, /* length of vectors */
     asa_com   *Com
 )
 {
-    INT j ;
+    ASAINT j ;
     double ginorm, pgnorm ;
     double xj, gj, xg, xp, t ;
 
@@ -4154,10 +4154,10 @@ PRIVATE double asa_update_2
     double *gold, /* old g */
     double *gnew, /* new g */
     double    *d, /* d */
-    INT        n /* length of vectors */
+    ASAINT        n /* length of vectors */
 )
 {
-    INT i, n5 ;
+    ASAINT i, n5 ;
     double s, t ;
     t = ZERO ;
     n5 = n % 5 ;
@@ -4289,10 +4289,10 @@ PRIVATE void asa_update_dg0
     double   *gnew, /* new g */
     double      *d, /* d */
     double *gnorm2, /* 2-norm of g */
-    INT          n /* length of vectors */
+    ASAINT          n /* length of vectors */
 )
 {
-    INT i, n5 ;
+    ASAINT i, n5 ;
     double s, t ;
     s = ZERO ;
     n5 = n % 5 ;
@@ -4392,10 +4392,10 @@ PRIVATE double asa_update_dg
     double      *d,
     double    beta,
     double *gnorm2, /* 2-norm of gnew */
-    INT          n /* length of vectors */
+    ASAINT          n /* length of vectors */
 )
 {
-    INT i, n5 ;
+    ASAINT i, n5 ;
     double dnorm2, s, t ;
     s = ZERO ;
     dnorm2 = ZERO ;
@@ -4522,10 +4522,10 @@ PRIVATE void asa_update_ykyk
     double *gnew, /* new g */
     double *Ykyk,
     double *Ykgk,
-    INT        n /* length of vectors */
+    ASAINT        n /* length of vectors */
 )
 {
-    INT i, n5 ;
+    ASAINT i, n5 ;
     double t, yk, ykyk, ykgk ;
     ykyk = ZERO ;
     ykgk = ZERO ;
@@ -4585,10 +4585,10 @@ PRIVATE double asa_update_inf2
     double   *gnew, /* new g */
     double      *d, /* d */
     double *gnorm2, /* 2-norm of g */
-    INT          n /* length of vectors */
+    ASAINT          n /* length of vectors */
 )
 {
-    INT i, n5 ;
+    ASAINT i, n5 ;
     double gnorm, s, t ;
     gnorm = ZERO ;
     s = ZERO ;
@@ -4654,10 +4654,10 @@ PRIVATE void asa_step
     double     *x , /* initial vector */
     double     *d , /* search direction */
     double  alpha , /* stepsize */
-    INT         n   /* length of the vectors */
+    ASAINT         n   /* length of the vectors */
 )
 {
-    INT n5, i ;
+    ASAINT n5, i ;
     n5 = n % 5 ;
     if (alpha == -ONE)
     {
@@ -4695,10 +4695,10 @@ PRIVATE void asa_init
 (
     double *x, /* input and output vector */
     double  s, /* scalar */
-    INT     n /* length of vector */
+    ASAINT     n /* length of vector */
 )
 {
-    INT i, n5 ;
+    ASAINT i, n5 ;
     n5 = n % 5 ;
     for (i = 0; i < n5; i++) x [i] = s ;
     for (; i < n;)
@@ -4725,11 +4725,11 @@ PRIVATE void asa_init
 PRIVATE double asa_max
 (
     double *x,
-    INT     n
+    ASAINT     n
 )
 {
     double xnorm ;
-    INT j, n5 ;
+    ASAINT j, n5 ;
     n5 = n % 5 ;
     xnorm = ZERO ;
     for (j = 0; j < n5; j++) if ( xnorm < fabs (x [j]) ) xnorm = fabs (x [j]) ;
@@ -4759,7 +4759,7 @@ PRIVATE void asa_project
     asa_com  *Com   /* cg com structure */
 )
 {
-    INT j, n ;
+    ASAINT j, n ;
     double t, *lo, *hi ;
     lo = Com->lo ;
     hi = Com->hi ;
@@ -4786,7 +4786,7 @@ PRIVATE void asa_maxstep
 )
 {
     double bdist, step, minstep, maxstep, xj, t, *lo, *hi ;
-    INT j, n ;
+    ASAINT j, n ;
 
     Com->minflag = TRUE ;
     n = Com->nfree ;
@@ -4873,7 +4873,7 @@ PRIVATE int asa_grad_proj /*return:
 )
 {
     int status, hitbound, getbound, freebound ;
-    INT count, i, ident, index, iter, j, ll, ll0, mcount, mm, n, nf, nf_line,
+    ASAINT count, i, ident, index, iter, j, ll, ll0, mcount, mm, n, nf, nf_line,
         ng, nl, np ;
     double alpha, armijo_decay, armijo0, armijo1, f, fmin, fc, fr, sts, gtd,
            fmax, lambda, pgnorm, ginorm, gnorm, xnorm,
@@ -5648,7 +5648,7 @@ PRIVATE int asa_identify
 )
 {
     int ident ;
-    INT j, n ;
+    ASAINT j, n ;
     double t, t1, xj, *lo, *hi ;
     n = Com->n ;
     lo = Com->lo ;
@@ -5677,7 +5677,7 @@ PRIVATE void asa_expandx
     asa_com *Com
 )
 {
-    INT i, j, nfree, *ifree ;
+    ASAINT i, j, nfree, *ifree ;
     double t ;
     ifree = Com->ifree ;
     nfree = Com->nfree ;
@@ -5704,7 +5704,7 @@ PRIVATE void asa_shrinkx
     asa_com *Com
 )
 {
-    INT i, j, nfree, *ifree ;
+    ASAINT i, j, nfree, *ifree ;
     double t ;
     ifree = Com->ifree ;
     nfree = Com->nfree ;
@@ -5732,7 +5732,7 @@ PRIVATE void asa_shrinkxg
     asa_com *Com
 )
 {
-    INT i, j, nfree, *ifree ;
+    ASAINT i, j, nfree, *ifree ;
     double t ;
     ifree = Com->ifree ;
     nfree = Com->nfree ;
@@ -5763,7 +5763,7 @@ PRIVATE void asa_expand_all
     asa_com *Com
 )
 {
-    INT i, j, nfree, *ifree ;
+    ASAINT i, j, nfree, *ifree ;
     double t, *x, *g, *pg, *lo, *hi ;
     x = Com->x ;
     g = Com->g ;
@@ -5812,7 +5812,7 @@ PRIVATE void asa_shrink_all
     asa_com *Com
 )
 {
-    INT i, j, nfree, *ifree ;
+    ASAINT i, j, nfree, *ifree ;
     double t, *lo, *hi, *g, *x ;
     x = Com->x ;
     g = Com->g ;

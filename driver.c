@@ -49,7 +49,7 @@ double myvalgrad
 int main (void)
 {
     double *x, *lo, *hi ;
-    INT i, n ;
+    ASAINT i, n ;
 
     /* if you want to change parameter value, you need the following: */
     asacg_parm cgParm ;
@@ -101,7 +101,7 @@ double myvalue /* evaluate the objective function */
 )
 {
     double f, t, *x ;
-    INT i, n ;
+    ASAINT i, n ;
     x = asa->x ;
     n = asa->n ;
     f = 0. ;
@@ -120,7 +120,7 @@ void mygrad /* evaluate the gradient of the objective function */
 )
 {
     double t, *g, *x ;
-    INT i, n ;
+    ASAINT i, n ;
     x = asa->x ;
     g = asa->g ;
     n = asa->n ;
@@ -139,7 +139,7 @@ double myvalgrad /* value and gradient of the objective function */
 )
 {
     double f, xi, t, *g, *x ;
-    INT i, n ;
+    ASAINT i, n ;
     x = asa->x ;
     g = asa->g ;
     n = asa->n ;

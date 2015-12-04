@@ -30,20 +30,20 @@ typedef struct asa_com_struct /* common variables */
     double        bdist ; /* closest distance to bounds */
     int         minflag ; /* T (minstep correct), F (minstep is lower bound) */
     int           nfree ; /* number of free variables */
-    INT          *ifree ; /* indices of free variables */
-    INT               n ; /* problem dimension, saved for reference */
-    INT              n5 ; /* n % 5 */
-    INT              nf ; /* total number of function evaluations */
-    INT              ng ; /* total number of gradient evaluations */
-    INT         cbbiter ; /* total number of cbb iterations */
-    INT          cgiter ; /* total number of cg iterations */
-    INT         cbbfunc ; /* total cbb function evaluations */
-    INT         cbbgrad ; /* total cbb gradient evaluations */
-    INT          cgfunc ; /* total cg function evaluations */
-    INT          cggrad ; /* total cg gradient evaluations */
-    INT         cgmaxit ; /* maximum number of iterations in one pass of cg */
-    INT         pgmaxit ; /* max iterations in one pass of gradient projection*/
-    INT       pgmaxfunc ; /* max function evals/pass of gradient projection */
+    ASAINT          *ifree ; /* indices of free variables */
+    ASAINT               n ; /* problem dimension, saved for reference */
+    ASAINT              n5 ; /* n % 5 */
+    ASAINT              nf ; /* total number of function evaluations */
+    ASAINT              ng ; /* total number of gradient evaluations */
+    ASAINT         cbbiter ; /* total number of cbb iterations */
+    ASAINT          cgiter ; /* total number of cg iterations */
+    ASAINT         cbbfunc ; /* total cbb function evaluations */
+    ASAINT         cbbgrad ; /* total cbb gradient evaluations */
+    ASAINT          cgfunc ; /* total cg function evaluations */
+    ASAINT          cggrad ; /* total cg gradient evaluations */
+    ASAINT         cgmaxit ; /* maximum number of iterations in one pass of cg */
+    ASAINT         pgmaxit ; /* max iterations in one pass of gradient projection*/
+    ASAINT       pgmaxfunc ; /* max function evals/pass of gradient projection */
 
     double    SmallCost ; /* |f| <= SmallCost => set PertRule = F */
     double        alpha ; /* stepsize along search direction */
@@ -174,7 +174,7 @@ PRIVATE void asacg_Yk /* same as cg_Yk */
     double *gold, /* initial vector */
     double *gnew, /* search direction */
     double  *yty, /* y'y */
-    INT        n  /* length of the vectors */
+    ASAINT        n  /* length of the vectors */
 ) ;
 
 PRIVATE int asacg_evaluate /* same as cg_evaluate */
@@ -190,7 +190,7 @@ PRIVATE void asa_matvec
     double *A, /* dense matrix */
     double *x, /* input vector */
     int     n, /* number of columns of A */
-    INT     m, /* number of rows of A */
+    ASAINT     m, /* number of rows of A */
     int     w  /* T => y = A*x, F => y = A'*x */
 ) ;
 
@@ -216,7 +216,7 @@ PRIVATE void asa_scale
     double *y, /* output vector */
     double *x, /* input vector */
     double  s, /* scalar */
-    INT     n /* length of vector */
+    ASAINT     n /* length of vector */
 ) ;
 
 PRIVATE void asa_daxpy0
@@ -232,7 +232,7 @@ PRIVATE void asa_daxpy
     double     *x, /* input and output vector */
     double     *d, /* direction */
     double  alpha, /* stepsize */
-    INT         n  /* length of the vectors */
+    ASAINT         n  /* length of the vectors */
 ) ;
 
 PRIVATE double asa_dot0
@@ -247,7 +247,7 @@ PRIVATE double asa_dot
 (
     double *x , /* first vector */
     double *y , /* second vector */
-    INT     n   /* length of vectors */
+    ASAINT     n   /* length of vectors */
 ) ;
 
 PRIVATE void asa_copy0
@@ -261,7 +261,7 @@ PRIVATE void asa_copy
 (
     double *y, /* output of copy */
     double *x, /* input of copy */
-    INT     n  /* length of vectors */
+    ASAINT     n  /* length of vectors */
 ) ;
 
 PRIVATE void asa_update_xy
@@ -270,7 +270,7 @@ PRIVATE void asa_update_xy
     double *xnew, /* input of copy */
     double *y, /* output of copy */
     double *ynew, /* input of copy */
-    INT     n  /* length of vectors */
+    ASAINT     n  /* length of vectors */
 ) ;
 
 PRIVATE double asa_update_pg /* compute ginorm and pgnorm of g */
@@ -281,8 +281,8 @@ PRIVATE double asa_update_pg /* compute ginorm and pgnorm of g */
     double   bdist, /* distance of x to the boundary is greater than bdist*/
     double     *lo, /* lower bound */
     double     *hi, /* upper bound */
-    INT      nfree, /* dimension of subspace */
-    INT         n, /* length of vectors */
+    ASAINT      nfree, /* dimension of subspace */
+    ASAINT         n, /* length of vectors */
     asa_com  *Com
 ) ;
 
@@ -291,7 +291,7 @@ PRIVATE double asa_update_2
     double *gold, /* old g */
     double *gnew, /* new g */
     double    *d, /* d */
-    INT        n /* length of vectors */
+    ASAINT        n /* length of vectors */
 ) ;
 
 PRIVATE void asa_update_dg0
@@ -300,7 +300,7 @@ PRIVATE void asa_update_dg0
     double   *gnew, /* new g */
     double      *d, /* d */
     double *gnorm2, /* 2-norm of g */
-    INT          n /* length of vectors */
+    ASAINT          n /* length of vectors */
 ) ;
 
 PRIVATE double asa_update_dg
@@ -310,7 +310,7 @@ PRIVATE double asa_update_dg
     double      *d,
     double    beta,
     double *gnorm2, /* 2-norm of gnew */
-    INT          n /* length of vectors */
+    ASAINT          n /* length of vectors */
 ) ;
 
 PRIVATE void asa_update_ykyk
@@ -319,7 +319,7 @@ PRIVATE void asa_update_ykyk
     double *gnew, /* new g */
     double *Ykyk,
     double *Ykgk,
-    INT        n /* length of vectors */
+    ASAINT        n /* length of vectors */
 ) ;
 
 PRIVATE double asa_update_inf2
@@ -328,7 +328,7 @@ PRIVATE double asa_update_inf2
     double   *gnew, /* new g */
     double      *d, /* d */
     double *gnorm2, /* 2-norm of g */
-    INT          n /* length of vectors */
+    ASAINT          n /* length of vectors */
 ) ;
 
 PRIVATE void asa_step /* Compute xtemp = x + alpha d */
@@ -337,21 +337,21 @@ PRIVATE void asa_step /* Compute xtemp = x + alpha d */
     double     *x, /* initial vector */
     double     *d, /* search direction */
     double  alpha, /* stepsize */
-    INT         n  /* length of the vectors */
+    ASAINT         n  /* length of the vectors */
 ) ;
 
 PRIVATE void asa_init
 (
     double *x, /* input and output vector */
     double  s, /* scalar */
-    INT     n /* length of vector */
+    ASAINT     n /* length of vector */
 ) ;
 
 
 PRIVATE double asa_max /* Return max {fabs (x [j]) : 1 <= j < n}*/
 (
     double *x,
-    INT     n
+    ASAINT     n
 ) ;
 
 PRIVATE void asa_project
