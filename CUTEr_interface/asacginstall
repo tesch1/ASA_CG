@@ -1,0 +1,16 @@
+#!/bin/csh -f
+set CGCUTE = $cwd
+cp ../asa_user.h  $CUTER/common/include
+cp asa_cg.pro sdasa_cg.pro $CUTER/build/prototypes
+cp asa_cgma.c  $CUTER/common/src/tools
+cd ..
+make purge
+make
+cp asa_cg.o  $MYCUTER/double/bin
+cd $CUTER/common/src/tools
+gcc -O3 -lm -c asa_cgma.c
+cp asa_cgma.o $MYCUTER/double/bin
+cd $MYCUTER/bin
+sed -f $MYCUTER/double/config/script.sed $CUTER/build/prototypes/asa_cg.pro > asa_cg
+sed -f $MYCUTER/double/config/script.sed $CUTER/build/prototypes/sdasa_cg.pro > sdasa_cg
+cd $CGCUTE
